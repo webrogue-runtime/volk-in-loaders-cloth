@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
 	spec = parse_xml(specpath)
 
-	block_keys = ('INSTANCE_TABLE', 'DEVICE_TABLE', 'PROTOTYPES_H', 'PROTOTYPES_H_DEVICE', 'PROTOTYPES_C', 'LOAD_LOADER', 'LOAD_INSTANCE', 'LOAD_INSTANCE_TABLE', 'LOAD_DEVICE', 'LOAD_DEVICE_TABLE')
+	block_keys = ('INSTANCE_TABLE', 'DEVICE_TABLE', 'PROTOTYPES_H', 'PROTOTYPES_H_DEVICE', 'PROTOTYPES_C', 'PROTOTYPES_C_VILC', 'DECLODATION_C_VILC', 'LOAD_LOADER', 'LOAD_LOADER_VILC', 'LOAD_INSTANCE', 'LOAD_INSTANCE_VILC', 'LOAD_INSTANCE_TABLE', 'LOAD_DEVICE', 'LOAD_DEVICE_VILC', 'LOAD_DEVICE_TABLE')
 
 	blocks = {}
 
@@ -176,6 +176,19 @@ if __name__ == "__main__":
 
 		for name in sorted(cmdnames):
 			cmd = commands[name]
+			ret = cmd.findtext('proto/type')
+			params = []
+			param_names = []
+			for param in cmd.findall('param'):
+				api = param.get('api')
+				if api and ('vulkan' not in api.split(',')):
+					continue
+				param_str = param.text or ""
+				for child in param:
+					param_str += child.text or ""
+					param_str += child.tail or ""
+				params.append(param_str)
+				param_names.append(param.findtext('name'))
 			type = cmd.findtext('param[1]/type')
 
 			if name == 'vkGetInstanceProcAddr':
@@ -184,27 +197,58 @@ if __name__ == "__main__":
 				type = 'VkInstance'
 
 			extern_fn = 'extern PFN_' + name + ' ' + name + ';\n'
+			# load_fn = '#if ' + defined('VOLK_IN_LOADERS_CLOTH') + '\n'
+			load_fn_vilc = '\tvilc_' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
+			# load_fn += '#else\n'
 			load_fn = '\t' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
+			# load_fn += '#endif /* ' + defined('VOLK_IN_LOADERS_CLOTH') + ' */\n'
 			def_table = '\tPFN_' + name + ' ' + name + ';\n'
 			load_table = '\ttable->' + name + ' = (PFN_' + name + ')load(context, "' + name + '");\n'
 
 			if is_descendant_type(types, type, 'VkDevice') and name not in instance_commands:
 				blocks['LOAD_DEVICE'] += load_fn
+				blocks['LOAD_DEVICE_VILC'] += load_fn_vilc
 				blocks['DEVICE_TABLE'] += def_table
 				blocks['LOAD_DEVICE_TABLE'] += load_table
 				blocks['PROTOTYPES_H_DEVICE'] += extern_fn
 				devt += 1
 			elif is_descendant_type(types, type, 'VkInstance'):
 				blocks['LOAD_INSTANCE'] += load_fn
+				blocks['LOAD_INSTANCE_VILC'] += load_fn_vilc
 				blocks['PROTOTYPES_H'] += extern_fn
 				blocks['INSTANCE_TABLE'] += def_table
 				blocks['LOAD_INSTANCE_TABLE'] += load_table
 				instt += 1
 			elif type != '':
 				blocks['LOAD_LOADER'] += load_fn
+				blocks['LOAD_LOADER_VILC'] += load_fn_vilc
 				blocks['PROTOTYPES_H'] += extern_fn
 			else:
 				blocks['PROTOTYPES_H'] += extern_fn
+
+			blocks['DECLODATION_C_VILC'] += 'static PFN_' + name + ' vilc_' + name + ' = NULL;\n'
+	
+			blocks['PROTOTYPES_C_VILC'] += ret + ' ' + name + '(' + ', '.join(params) +') {\n'
+			blocks['PROTOTYPES_C_VILC'] += '\tvilc_initOnce();\n'
+			vilc_invocation = 'vilc_' + name + '(' + ', '.join(param_names) + ')'
+			if name == 'vkCreateInstance':
+				blocks['PROTOTYPES_C_VILC'] += '\tVkResult result = ' + vilc_invocation + ';\n'
+				blocks['PROTOTYPES_C_VILC'] += '\tif(result == VK_SUCCESS) {\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t\tloadedInstance = *pInstance;\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t\tvolkGenLoadInstance(loadedInstance, vkGetInstanceProcAddrStub);\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t\tvolkGenLoadDevice(loadedInstance, vkGetInstanceProcAddrStub);\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t}\n'
+				blocks['PROTOTYPES_C_VILC'] += '\treturn result;\n'
+			elif name == 'vkCreateDevice':
+				blocks['PROTOTYPES_C_VILC'] += '\tVkResult result = ' + vilc_invocation + ';\n'
+				blocks['PROTOTYPES_C_VILC'] += '\tif(result == VK_SUCCESS) {\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t\tloadedDevice = *pDevice;\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t\tvolkGenLoadDevice(loadedDevice, vkGetDeviceProcAddrStub);\n'
+				blocks['PROTOTYPES_C_VILC'] += '\t}\n'
+				blocks['PROTOTYPES_C_VILC'] += '\treturn result;\n'
+			else:
+				blocks['PROTOTYPES_C_VILC'] += '\t' + ('return ' if ret != 'void' else '') + vilc_invocation + ';\n'
+			blocks['PROTOTYPES_C_VILC'] += '}\n'
 
 			blocks['PROTOTYPES_C'] += 'PFN_' + name + ' ' + name + ';\n'
 

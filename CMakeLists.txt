@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5...3.30)
 
 project(volk VERSION
 # VOLK_GENERATE_VERSION
-337
+339
 # VOLK_GENERATE_VERSION
   LANGUAGES C
 )
@@ -24,14 +24,29 @@ endif()
 if(NOT DEFINED VOLK_HEADERS_ONLY)
   option(VOLK_HEADERS_ONLY "Add interface library only" OFF)
 endif()
+if(NOT DEFINED VOLK_HEADERS_ONLY)
+  option(VOLK_IN_LOADERS_CLOTH "Make VOLK act as Vulkan Loader" OFF)
+endif()
 if(NOT DEFINED VULKAN_HEADERS_INSTALL_DIR)
   set(VULKAN_HEADERS_INSTALL_DIR "" CACHE PATH "Where to get the Vulkan headers")
 endif()
 
 # -----------------------------------------------------
+# VOLK in Loader's Cloth
+
+if(VOLK_IN_LOADERS_CLOTH)
+  add_library(vulkan STATIC volk.h volk.c)
+  target_include_directories(vulkan PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_compile_definitions(vulkan PUBLIC VOLK_IN_LOADERS_CLOTH)
+endif()
+
+# -----------------------------------------------------
 # Static library
 
-if(NOT VOLK_HEADERS_ONLY OR VOLK_INSTALL)
+if(NOT VOLK_IN_LOADERS_CLOTH AND (NOT VOLK_HEADERS_ONLY OR VOLK_INSTALL))
   add_library(volk STATIC volk.h volk.c)
   add_library(volk::volk ALIAS volk)
   target_include_directories(volk PUBLIC
@@ -104,6 +119,13 @@ if(VOLK_INSTALL)
   include(GNUInstallDirs)
   set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/volk)
 
+  if(VOLK_IN_LOADERS_CLOTH)
+    install(TARGETS vulkan
+      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+  else()
   # Install files
   install(FILES volk.h volk.c DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
@@ -141,5 +163,5 @@ if(VOLK_INSTALL)
     ${CMAKE_CURRENT_BINARY_DIR}/volkConfigVersion.cmake
     DESTINATION ${INSTALL_CONFIGDIR}
   )
-
+  endif()
 endif()

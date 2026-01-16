@@ -19,7 +19,7 @@
 #endif
 
 /* VOLK_GENERATE_VERSION_DEFINE */
-#define VOLK_HEADER_VERSION 337
+#define VOLK_HEADER_VERSION 339
 /* VOLK_GENERATE_VERSION_DEFINE */
 
 #ifndef VK_NO_PROTOTYPES
@@ -1923,6 +1923,8 @@ struct VolkDeviceTable
 	/* VOLK_GENERATE_DEVICE_TABLE */
 };
 
+#if !defined(VOLK_IN_LOADERS_CLOTH)
+
 /* VOLK_GENERATE_PROTOTYPES_H */
 #if defined(VK_VERSION_1_0)
 extern PFN_vkCreateDevice vkCreateDevice;
@@ -3159,6 +3161,7 @@ extern PFN_vkAcquireNextImage2KHR vkAcquireNextImage2KHR;
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_swapchain)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
 /* VOLK_GENERATE_PROTOTYPES_H_DEVICE */
 #endif
+#endif /* VOLK_IN_LOADERS_CLOTH */
 
 #ifdef __cplusplus
 } // extern "C" / namespace volk
