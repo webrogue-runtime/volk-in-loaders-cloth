@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: Vulkan
+Description: VOLK mimicing Vulkan Loader
+Version: @VULKAN_VERSION@
+
+Libs: -L${libdir} -lvulkan -lvulkan_gfxstream -lc++ -lc++abi
+Cflags: -I${includedir}

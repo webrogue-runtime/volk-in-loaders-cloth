@@ -568,12 +568,6 @@ static PFN_vkSetDeviceMemoryPriorityEXT vilc_vkSetDeviceMemoryPriorityEXT = NULL
 #if defined(VK_EXT_pipeline_properties)
 static PFN_vkGetPipelinePropertiesEXT vilc_vkGetPipelinePropertiesEXT = NULL;
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-static PFN_vkGetPastPresentationTimingEXT vilc_vkGetPastPresentationTimingEXT = NULL;
-static PFN_vkGetSwapchainTimeDomainPropertiesEXT vilc_vkGetSwapchainTimeDomainPropertiesEXT = NULL;
-static PFN_vkGetSwapchainTimingPropertiesEXT vilc_vkGetSwapchainTimingPropertiesEXT = NULL;
-static PFN_vkSetSwapchainPresentTimingQueueSizeEXT vilc_vkSetSwapchainPresentTimingQueueSizeEXT = NULL;
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 static PFN_vkCreatePrivateDataSlotEXT vilc_vkCreatePrivateDataSlotEXT = NULL;
 static PFN_vkDestroyPrivateDataSlotEXT vilc_vkDestroyPrivateDataSlotEXT = NULL;
@@ -1012,9 +1006,6 @@ static PFN_vkCmdSetViewportWScalingNV vilc_vkCmdSetViewportWScalingNV = NULL;
 static PFN_vkCmdBuildClusterAccelerationStructureIndirectNV vilc_vkCmdBuildClusterAccelerationStructureIndirectNV = NULL;
 static PFN_vkGetClusterAccelerationStructureBuildSizesNV vilc_vkGetClusterAccelerationStructureBuildSizesNV = NULL;
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-static PFN_vkCmdSetComputeOccupancyPriorityNV vilc_vkCmdSetComputeOccupancyPriorityNV = NULL;
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_matrix)
 static PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV vilc_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = NULL;
 #endif /* defined(VK_NV_cooperative_matrix) */
@@ -1136,6 +1127,11 @@ static PFN_vkCmdSetViewportShadingRatePaletteNV vilc_vkCmdSetViewportShadingRate
 static PFN_vkGetMemoryNativeBufferOHOS vilc_vkGetMemoryNativeBufferOHOS = NULL;
 static PFN_vkGetNativeBufferPropertiesOHOS vilc_vkGetNativeBufferPropertiesOHOS = NULL;
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+static PFN_vkAcquireImageOHOS vilc_vkAcquireImageOHOS = NULL;
+static PFN_vkGetSwapchainGrallocUsageOHOS vilc_vkGetSwapchainGrallocUsageOHOS = NULL;
+static PFN_vkQueueSignalReleaseImageOHOS vilc_vkQueueSignalReleaseImageOHOS = NULL;
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_OHOS_surface)
 static PFN_vkCreateSurfaceOHOS vilc_vkCreateSurfaceOHOS = NULL;
 #endif /* defined(VK_OHOS_surface) */
@@ -1162,6 +1158,9 @@ static PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX vilc_vkGetPhysicalDev
 static PFN_vkGetDescriptorSetHostMappingVALVE vilc_vkGetDescriptorSetHostMappingVALVE = NULL;
 static PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE vilc_vkGetDescriptorSetLayoutHostMappingInfoVALVE = NULL;
 #endif /* defined(VK_VALVE_descriptor_set_host_mapping) */
+#if defined(VK_WEBROGUE_surface)
+static PFN_vkCreateSurfaceWEBROGUE vilc_vkCreateSurfaceWEBROGUE = NULL;
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control))
 static PFN_vkCmdSetDepthClampRangeEXT vilc_vkCmdSetDepthClampRangeEXT = NULL;
 #endif /* (defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control)) */
@@ -1705,6 +1704,9 @@ static void volkGenLoadInstance(void* context, PFN_vkVoidFunction (*load)(void*,
 	vilc_vkCreateScreenSurfaceQNX = (PFN_vkCreateScreenSurfaceQNX)load(context, "vkCreateScreenSurfaceQNX");
 	vilc_vkGetPhysicalDeviceScreenPresentationSupportQNX = (PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX)load(context, "vkGetPhysicalDeviceScreenPresentationSupportQNX");
 #endif /* defined(VK_QNX_screen_surface) */
+#if defined(VK_WEBROGUE_surface)
+	vilc_vkCreateSurfaceWEBROGUE = (PFN_vkCreateSurfaceWEBROGUE)load(context, "vkCreateSurfaceWEBROGUE");
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
 	vilc_vkGetPhysicalDevicePresentRectanglesKHR = (PFN_vkGetPhysicalDevicePresentRectanglesKHR)load(context, "vkGetPhysicalDevicePresentRectanglesKHR");
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
@@ -1936,6 +1938,9 @@ static void volkGenLoadInstance(void* context, PFN_vkVoidFunction (*load)(void*,
 	vkCreateScreenSurfaceQNX = (PFN_vkCreateScreenSurfaceQNX)load(context, "vkCreateScreenSurfaceQNX");
 	vkGetPhysicalDeviceScreenPresentationSupportQNX = (PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX)load(context, "vkGetPhysicalDeviceScreenPresentationSupportQNX");
 #endif /* defined(VK_QNX_screen_surface) */
+#if defined(VK_WEBROGUE_surface)
+	vkCreateSurfaceWEBROGUE = (PFN_vkCreateSurfaceWEBROGUE)load(context, "vkCreateSurfaceWEBROGUE");
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
 	vkGetPhysicalDevicePresentRectanglesKHR = (PFN_vkGetPhysicalDevicePresentRectanglesKHR)load(context, "vkGetPhysicalDevicePresentRectanglesKHR");
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
@@ -2364,12 +2369,6 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 #if defined(VK_EXT_pipeline_properties)
 	vilc_vkGetPipelinePropertiesEXT = (PFN_vkGetPipelinePropertiesEXT)load(context, "vkGetPipelinePropertiesEXT");
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-	vilc_vkGetPastPresentationTimingEXT = (PFN_vkGetPastPresentationTimingEXT)load(context, "vkGetPastPresentationTimingEXT");
-	vilc_vkGetSwapchainTimeDomainPropertiesEXT = (PFN_vkGetSwapchainTimeDomainPropertiesEXT)load(context, "vkGetSwapchainTimeDomainPropertiesEXT");
-	vilc_vkGetSwapchainTimingPropertiesEXT = (PFN_vkGetSwapchainTimingPropertiesEXT)load(context, "vkGetSwapchainTimingPropertiesEXT");
-	vilc_vkSetSwapchainPresentTimingQueueSizeEXT = (PFN_vkSetSwapchainPresentTimingQueueSizeEXT)load(context, "vkSetSwapchainPresentTimingQueueSizeEXT");
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 	vilc_vkCreatePrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)load(context, "vkCreatePrivateDataSlotEXT");
 	vilc_vkDestroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)load(context, "vkDestroyPrivateDataSlotEXT");
@@ -2709,9 +2708,6 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 	vilc_vkCmdBuildClusterAccelerationStructureIndirectNV = (PFN_vkCmdBuildClusterAccelerationStructureIndirectNV)load(context, "vkCmdBuildClusterAccelerationStructureIndirectNV");
 	vilc_vkGetClusterAccelerationStructureBuildSizesNV = (PFN_vkGetClusterAccelerationStructureBuildSizesNV)load(context, "vkGetClusterAccelerationStructureBuildSizesNV");
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-	vilc_vkCmdSetComputeOccupancyPriorityNV = (PFN_vkCmdSetComputeOccupancyPriorityNV)load(context, "vkCmdSetComputeOccupancyPriorityNV");
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_vector)
 	vilc_vkCmdConvertCooperativeVectorMatrixNV = (PFN_vkCmdConvertCooperativeVectorMatrixNV)load(context, "vkCmdConvertCooperativeVectorMatrixNV");
 	vilc_vkConvertCooperativeVectorMatrixNV = (PFN_vkConvertCooperativeVectorMatrixNV)load(context, "vkConvertCooperativeVectorMatrixNV");
@@ -2819,6 +2815,11 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 	vilc_vkGetMemoryNativeBufferOHOS = (PFN_vkGetMemoryNativeBufferOHOS)load(context, "vkGetMemoryNativeBufferOHOS");
 	vilc_vkGetNativeBufferPropertiesOHOS = (PFN_vkGetNativeBufferPropertiesOHOS)load(context, "vkGetNativeBufferPropertiesOHOS");
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+	vilc_vkAcquireImageOHOS = (PFN_vkAcquireImageOHOS)load(context, "vkAcquireImageOHOS");
+	vilc_vkGetSwapchainGrallocUsageOHOS = (PFN_vkGetSwapchainGrallocUsageOHOS)load(context, "vkGetSwapchainGrallocUsageOHOS");
+	vilc_vkQueueSignalReleaseImageOHOS = (PFN_vkQueueSignalReleaseImageOHOS)load(context, "vkQueueSignalReleaseImageOHOS");
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_QCOM_tile_memory_heap)
 	vilc_vkCmdBindTileMemoryQCOM = (PFN_vkCmdBindTileMemoryQCOM)load(context, "vkCmdBindTileMemoryQCOM");
 #endif /* defined(VK_QCOM_tile_memory_heap) */
@@ -3363,12 +3364,6 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 #if defined(VK_EXT_pipeline_properties)
 	vkGetPipelinePropertiesEXT = (PFN_vkGetPipelinePropertiesEXT)load(context, "vkGetPipelinePropertiesEXT");
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-	vkGetPastPresentationTimingEXT = (PFN_vkGetPastPresentationTimingEXT)load(context, "vkGetPastPresentationTimingEXT");
-	vkGetSwapchainTimeDomainPropertiesEXT = (PFN_vkGetSwapchainTimeDomainPropertiesEXT)load(context, "vkGetSwapchainTimeDomainPropertiesEXT");
-	vkGetSwapchainTimingPropertiesEXT = (PFN_vkGetSwapchainTimingPropertiesEXT)load(context, "vkGetSwapchainTimingPropertiesEXT");
-	vkSetSwapchainPresentTimingQueueSizeEXT = (PFN_vkSetSwapchainPresentTimingQueueSizeEXT)load(context, "vkSetSwapchainPresentTimingQueueSizeEXT");
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 	vkCreatePrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)load(context, "vkCreatePrivateDataSlotEXT");
 	vkDestroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)load(context, "vkDestroyPrivateDataSlotEXT");
@@ -3708,9 +3703,6 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 	vkCmdBuildClusterAccelerationStructureIndirectNV = (PFN_vkCmdBuildClusterAccelerationStructureIndirectNV)load(context, "vkCmdBuildClusterAccelerationStructureIndirectNV");
 	vkGetClusterAccelerationStructureBuildSizesNV = (PFN_vkGetClusterAccelerationStructureBuildSizesNV)load(context, "vkGetClusterAccelerationStructureBuildSizesNV");
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-	vkCmdSetComputeOccupancyPriorityNV = (PFN_vkCmdSetComputeOccupancyPriorityNV)load(context, "vkCmdSetComputeOccupancyPriorityNV");
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_vector)
 	vkCmdConvertCooperativeVectorMatrixNV = (PFN_vkCmdConvertCooperativeVectorMatrixNV)load(context, "vkCmdConvertCooperativeVectorMatrixNV");
 	vkConvertCooperativeVectorMatrixNV = (PFN_vkConvertCooperativeVectorMatrixNV)load(context, "vkConvertCooperativeVectorMatrixNV");
@@ -3818,6 +3810,11 @@ static void volkGenLoadDevice(void* context, PFN_vkVoidFunction (*load)(void*, c
 	vkGetMemoryNativeBufferOHOS = (PFN_vkGetMemoryNativeBufferOHOS)load(context, "vkGetMemoryNativeBufferOHOS");
 	vkGetNativeBufferPropertiesOHOS = (PFN_vkGetNativeBufferPropertiesOHOS)load(context, "vkGetNativeBufferPropertiesOHOS");
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+	vkAcquireImageOHOS = (PFN_vkAcquireImageOHOS)load(context, "vkAcquireImageOHOS");
+	vkGetSwapchainGrallocUsageOHOS = (PFN_vkGetSwapchainGrallocUsageOHOS)load(context, "vkGetSwapchainGrallocUsageOHOS");
+	vkQueueSignalReleaseImageOHOS = (PFN_vkQueueSignalReleaseImageOHOS)load(context, "vkQueueSignalReleaseImageOHOS");
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_QCOM_tile_memory_heap)
 	vkCmdBindTileMemoryQCOM = (PFN_vkCmdBindTileMemoryQCOM)load(context, "vkCmdBindTileMemoryQCOM");
 #endif /* defined(VK_QCOM_tile_memory_heap) */
@@ -4174,6 +4171,9 @@ static void volkGenLoadInstanceTable(struct VolkInstanceTable* table, void* cont
 	table->vkCreateScreenSurfaceQNX = (PFN_vkCreateScreenSurfaceQNX)load(context, "vkCreateScreenSurfaceQNX");
 	table->vkGetPhysicalDeviceScreenPresentationSupportQNX = (PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX)load(context, "vkGetPhysicalDeviceScreenPresentationSupportQNX");
 #endif /* defined(VK_QNX_screen_surface) */
+#if defined(VK_WEBROGUE_surface)
+	table->vkCreateSurfaceWEBROGUE = (PFN_vkCreateSurfaceWEBROGUE)load(context, "vkCreateSurfaceWEBROGUE");
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1))
 	table->vkGetPhysicalDevicePresentRectanglesKHR = (PFN_vkGetPhysicalDevicePresentRectanglesKHR)load(context, "vkGetPhysicalDevicePresentRectanglesKHR");
 #endif /* (defined(VK_KHR_device_group) && defined(VK_KHR_surface)) || (defined(VK_KHR_swapchain) && defined(VK_VERSION_1_1)) */
@@ -4600,12 +4600,6 @@ static void volkGenLoadDeviceTable(struct VolkDeviceTable* table, void* context,
 #if defined(VK_EXT_pipeline_properties)
 	table->vkGetPipelinePropertiesEXT = (PFN_vkGetPipelinePropertiesEXT)load(context, "vkGetPipelinePropertiesEXT");
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-	table->vkGetPastPresentationTimingEXT = (PFN_vkGetPastPresentationTimingEXT)load(context, "vkGetPastPresentationTimingEXT");
-	table->vkGetSwapchainTimeDomainPropertiesEXT = (PFN_vkGetSwapchainTimeDomainPropertiesEXT)load(context, "vkGetSwapchainTimeDomainPropertiesEXT");
-	table->vkGetSwapchainTimingPropertiesEXT = (PFN_vkGetSwapchainTimingPropertiesEXT)load(context, "vkGetSwapchainTimingPropertiesEXT");
-	table->vkSetSwapchainPresentTimingQueueSizeEXT = (PFN_vkSetSwapchainPresentTimingQueueSizeEXT)load(context, "vkSetSwapchainPresentTimingQueueSizeEXT");
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 	table->vkCreatePrivateDataSlotEXT = (PFN_vkCreatePrivateDataSlotEXT)load(context, "vkCreatePrivateDataSlotEXT");
 	table->vkDestroyPrivateDataSlotEXT = (PFN_vkDestroyPrivateDataSlotEXT)load(context, "vkDestroyPrivateDataSlotEXT");
@@ -4945,9 +4939,6 @@ static void volkGenLoadDeviceTable(struct VolkDeviceTable* table, void* context,
 	table->vkCmdBuildClusterAccelerationStructureIndirectNV = (PFN_vkCmdBuildClusterAccelerationStructureIndirectNV)load(context, "vkCmdBuildClusterAccelerationStructureIndirectNV");
 	table->vkGetClusterAccelerationStructureBuildSizesNV = (PFN_vkGetClusterAccelerationStructureBuildSizesNV)load(context, "vkGetClusterAccelerationStructureBuildSizesNV");
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-	table->vkCmdSetComputeOccupancyPriorityNV = (PFN_vkCmdSetComputeOccupancyPriorityNV)load(context, "vkCmdSetComputeOccupancyPriorityNV");
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_vector)
 	table->vkCmdConvertCooperativeVectorMatrixNV = (PFN_vkCmdConvertCooperativeVectorMatrixNV)load(context, "vkCmdConvertCooperativeVectorMatrixNV");
 	table->vkConvertCooperativeVectorMatrixNV = (PFN_vkConvertCooperativeVectorMatrixNV)load(context, "vkConvertCooperativeVectorMatrixNV");
@@ -5055,6 +5046,11 @@ static void volkGenLoadDeviceTable(struct VolkDeviceTable* table, void* context,
 	table->vkGetMemoryNativeBufferOHOS = (PFN_vkGetMemoryNativeBufferOHOS)load(context, "vkGetMemoryNativeBufferOHOS");
 	table->vkGetNativeBufferPropertiesOHOS = (PFN_vkGetNativeBufferPropertiesOHOS)load(context, "vkGetNativeBufferPropertiesOHOS");
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+	table->vkAcquireImageOHOS = (PFN_vkAcquireImageOHOS)load(context, "vkAcquireImageOHOS");
+	table->vkGetSwapchainGrallocUsageOHOS = (PFN_vkGetSwapchainGrallocUsageOHOS)load(context, "vkGetSwapchainGrallocUsageOHOS");
+	table->vkQueueSignalReleaseImageOHOS = (PFN_vkQueueSignalReleaseImageOHOS)load(context, "vkQueueSignalReleaseImageOHOS");
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_QCOM_tile_memory_heap)
 	table->vkCmdBindTileMemoryQCOM = (PFN_vkCmdBindTileMemoryQCOM)load(context, "vkCmdBindTileMemoryQCOM");
 #endif /* defined(VK_QCOM_tile_memory_heap) */
@@ -6838,24 +6834,6 @@ VkResult vkGetPipelinePropertiesEXT(VkDevice device, const VkPipelineInfoEXT* pP
 	return vilc_vkGetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
 }
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-VkResult vkGetPastPresentationTimingEXT(VkDevice device, const VkPastPresentationTimingInfoEXT* pPastPresentationTimingInfo, VkPastPresentationTimingPropertiesEXT* pPastPresentationTimingProperties) {
-	vilc_initOnce();
-	return vilc_vkGetPastPresentationTimingEXT(device, pPastPresentationTimingInfo, pPastPresentationTimingProperties);
-}
-VkResult vkGetSwapchainTimeDomainPropertiesEXT(VkDevice device, VkSwapchainKHR swapchain, VkSwapchainTimeDomainPropertiesEXT* pSwapchainTimeDomainProperties, uint64_t* pTimeDomainsCounter) {
-	vilc_initOnce();
-	return vilc_vkGetSwapchainTimeDomainPropertiesEXT(device, swapchain, pSwapchainTimeDomainProperties, pTimeDomainsCounter);
-}
-VkResult vkGetSwapchainTimingPropertiesEXT(VkDevice device, VkSwapchainKHR swapchain, VkSwapchainTimingPropertiesEXT* pSwapchainTimingProperties, uint64_t* pSwapchainTimingPropertiesCounter) {
-	vilc_initOnce();
-	return vilc_vkGetSwapchainTimingPropertiesEXT(device, swapchain, pSwapchainTimingProperties, pSwapchainTimingPropertiesCounter);
-}
-VkResult vkSetSwapchainPresentTimingQueueSizeEXT(VkDevice device, VkSwapchainKHR swapchain, uint32_t size) {
-	vilc_initOnce();
-	return vilc_vkSetSwapchainPresentTimingQueueSizeEXT(device, swapchain, size);
-}
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 VkResult vkCreatePrivateDataSlotEXT(VkDevice device, const VkPrivateDataSlotCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
 	vilc_initOnce();
@@ -8050,12 +8028,6 @@ void vkGetClusterAccelerationStructureBuildSizesNV(VkDevice device, const VkClus
 	vilc_vkGetClusterAccelerationStructureBuildSizesNV(device, pInfo, pSizeInfo);
 }
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-void vkCmdSetComputeOccupancyPriorityNV(VkCommandBuffer commandBuffer, const VkComputeOccupancyPriorityParametersNV* pParameters) {
-	vilc_initOnce();
-	vilc_vkCmdSetComputeOccupancyPriorityNV(commandBuffer, pParameters);
-}
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_matrix)
 VkResult vkGetPhysicalDeviceCooperativeMatrixPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesNV* pProperties) {
 	vilc_initOnce();
@@ -8384,6 +8356,20 @@ VkResult vkGetNativeBufferPropertiesOHOS(VkDevice device, const struct OH_Native
 	return vilc_vkGetNativeBufferPropertiesOHOS(device, buffer, pProperties);
 }
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+VkResult vkAcquireImageOHOS(VkDevice device, VkImage image, int32_t nativeFenceFd, VkSemaphore semaphore, VkFence fence) {
+	vilc_initOnce();
+	return vilc_vkAcquireImageOHOS(device, image, nativeFenceFd, semaphore, fence);
+}
+VkResult vkGetSwapchainGrallocUsageOHOS(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, uint64_t* grallocUsage) {
+	vilc_initOnce();
+	return vilc_vkGetSwapchainGrallocUsageOHOS(device, format, imageUsage, grallocUsage);
+}
+VkResult vkQueueSignalReleaseImageOHOS(VkQueue queue, uint32_t waitSemaphoreCount, const VkSemaphore* pWaitSemaphores, VkImage image, int32_t* pNativeFenceFd) {
+	vilc_initOnce();
+	return vilc_vkQueueSignalReleaseImageOHOS(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
+}
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_OHOS_surface)
 VkResult vkCreateSurfaceOHOS(VkInstance instance, const VkSurfaceCreateInfoOHOS* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 	vilc_initOnce();
@@ -8446,6 +8432,12 @@ void vkGetDescriptorSetLayoutHostMappingInfoVALVE(VkDevice device, const VkDescr
 	vilc_vkGetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
 }
 #endif /* defined(VK_VALVE_descriptor_set_host_mapping) */
+#if defined(VK_WEBROGUE_surface)
+VkResult vkCreateSurfaceWEBROGUE(VkInstance instance, const VkSurfaceCreateInfoWEBROGUE* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+	vilc_initOnce();
+	return vilc_vkCreateSurfaceWEBROGUE(instance, pCreateInfo, pAllocator, pSurface);
+}
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control))
 void vkCmdSetDepthClampRangeEXT(VkCommandBuffer commandBuffer, VkDepthClampModeEXT depthClampMode, const VkDepthClampRangeEXT* pDepthClampRange) {
 	vilc_initOnce();
@@ -9222,12 +9214,6 @@ PFN_vkSetDeviceMemoryPriorityEXT vkSetDeviceMemoryPriorityEXT;
 #if defined(VK_EXT_pipeline_properties)
 PFN_vkGetPipelinePropertiesEXT vkGetPipelinePropertiesEXT;
 #endif /* defined(VK_EXT_pipeline_properties) */
-#if defined(VK_EXT_present_timing)
-PFN_vkGetPastPresentationTimingEXT vkGetPastPresentationTimingEXT;
-PFN_vkGetSwapchainTimeDomainPropertiesEXT vkGetSwapchainTimeDomainPropertiesEXT;
-PFN_vkGetSwapchainTimingPropertiesEXT vkGetSwapchainTimingPropertiesEXT;
-PFN_vkSetSwapchainPresentTimingQueueSizeEXT vkSetSwapchainPresentTimingQueueSizeEXT;
-#endif /* defined(VK_EXT_present_timing) */
 #if defined(VK_EXT_private_data)
 PFN_vkCreatePrivateDataSlotEXT vkCreatePrivateDataSlotEXT;
 PFN_vkDestroyPrivateDataSlotEXT vkDestroyPrivateDataSlotEXT;
@@ -9666,9 +9652,6 @@ PFN_vkCmdSetViewportWScalingNV vkCmdSetViewportWScalingNV;
 PFN_vkCmdBuildClusterAccelerationStructureIndirectNV vkCmdBuildClusterAccelerationStructureIndirectNV;
 PFN_vkGetClusterAccelerationStructureBuildSizesNV vkGetClusterAccelerationStructureBuildSizesNV;
 #endif /* defined(VK_NV_cluster_acceleration_structure) */
-#if defined(VK_NV_compute_occupancy_priority)
-PFN_vkCmdSetComputeOccupancyPriorityNV vkCmdSetComputeOccupancyPriorityNV;
-#endif /* defined(VK_NV_compute_occupancy_priority) */
 #if defined(VK_NV_cooperative_matrix)
 PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV vkGetPhysicalDeviceCooperativeMatrixPropertiesNV;
 #endif /* defined(VK_NV_cooperative_matrix) */
@@ -9790,6 +9773,11 @@ PFN_vkCmdSetViewportShadingRatePaletteNV vkCmdSetViewportShadingRatePaletteNV;
 PFN_vkGetMemoryNativeBufferOHOS vkGetMemoryNativeBufferOHOS;
 PFN_vkGetNativeBufferPropertiesOHOS vkGetNativeBufferPropertiesOHOS;
 #endif /* defined(VK_OHOS_external_memory) */
+#if defined(VK_OHOS_native_buffer)
+PFN_vkAcquireImageOHOS vkAcquireImageOHOS;
+PFN_vkGetSwapchainGrallocUsageOHOS vkGetSwapchainGrallocUsageOHOS;
+PFN_vkQueueSignalReleaseImageOHOS vkQueueSignalReleaseImageOHOS;
+#endif /* defined(VK_OHOS_native_buffer) */
 #if defined(VK_OHOS_surface)
 PFN_vkCreateSurfaceOHOS vkCreateSurfaceOHOS;
 #endif /* defined(VK_OHOS_surface) */
@@ -9816,6 +9804,9 @@ PFN_vkGetPhysicalDeviceScreenPresentationSupportQNX vkGetPhysicalDeviceScreenPre
 PFN_vkGetDescriptorSetHostMappingVALVE vkGetDescriptorSetHostMappingVALVE;
 PFN_vkGetDescriptorSetLayoutHostMappingInfoVALVE vkGetDescriptorSetLayoutHostMappingInfoVALVE;
 #endif /* defined(VK_VALVE_descriptor_set_host_mapping) */
+#if defined(VK_WEBROGUE_surface)
+PFN_vkCreateSurfaceWEBROGUE vkCreateSurfaceWEBROGUE;
+#endif /* defined(VK_WEBROGUE_surface) */
 #if (defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control))
 PFN_vkCmdSetDepthClampRangeEXT vkCmdSetDepthClampRangeEXT;
 #endif /* (defined(VK_EXT_depth_clamp_control)) || (defined(VK_EXT_shader_object) && defined(VK_EXT_depth_clamp_control)) */

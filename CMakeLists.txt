@@ -2,16 +2,22 @@ cmake_minimum_required(VERSION 3.5...3.30)
 
 project(volk VERSION
 # VOLK_GENERATE_VERSION
-339
+333
 # VOLK_GENERATE_VERSION
   LANGUAGES C
 )
+
+set(VULKAN_VERSION "1.4.341") # TODO get patch from vk.xml
 
 # CMake 3.12 changes the default behaviour of option() to leave local variables
 # unchanged if they exist (which we want), but we must work with older CMake versions.
 if(NOT DEFINED VOLK_STATIC_DEFINES)
   set(VOLK_STATIC_DEFINES "" CACHE STRING "Additional defines for building the volk static library, e.g. Vulkan platform defines")
 endif()
+if(NOT DEFINED VILC_DEFINES)
+  set(VILC_DEFINES "" CACHE STRING "Additional defines for building the vilc library, e.g. Vulkan platform defines")
+endif()
+
 if(NOT DEFINED VOLK_PULL_IN_VULKAN)
   option(VOLK_PULL_IN_VULKAN "Vulkan as a transitive dependency" ON)
 endif()
@@ -41,6 +47,9 @@ if(VOLK_IN_LOADERS_CLOTH)
     $<INSTALL_INTERFACE:include>
   )
   target_compile_definitions(vulkan PUBLIC VOLK_IN_LOADERS_CLOTH)
+  if(VILC_DEFINES)
+    target_compile_definitions(vulkan PRIVATE ${VILC_DEFINES})
+  endif()
 endif()
 
 # -----------------------------------------------------
@@ -124,6 +133,19 @@ if(VOLK_INSTALL)
       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+    set(
+        VULKAN_PC
+        ${CMAKE_CURRENT_BINARY_DIR}/vulkan.pc
+    )
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/vulkan.pc.cmakein
+        ${VULKAN_PC}
+        @ONLY
+    )
+    install(
+        FILES ${VULKAN_PC}
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
     )
   else()
   # Install files
