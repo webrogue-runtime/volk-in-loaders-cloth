@@ -6,5 +6,5 @@ Name: Vulkan
 Description: VOLK mimicing Vulkan Loader
 Version: @VULKAN_VERSION@
 
-Libs: -L${libdir} -lvulkan -lvulkan_gfxstream -lc++ -lc++abi
+Libs: -L${libdir} -lvulkan -lvulkan_virtio -lc++ -lc++abi
 Cflags: -I${includedir}
